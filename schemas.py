@@ -11,8 +11,8 @@ Model name is converted to lowercase for the collection name:
 - BlogPost -> "blogs" collection
 """
 
-from pydantic import BaseModel, Field
-from typing import Optional
+from pydantic import BaseModel, Field, EmailStr
+from typing import Optional, Literal
 
 # Example schemas (replace with your own):
 
@@ -38,11 +38,18 @@ class Product(BaseModel):
     category: str = Field(..., description="Product category")
     in_stock: bool = Field(True, description="Whether product is in stock")
 
-# Add your own schemas here:
-# --------------------------------------------------
-
-# Note: The Flames database viewer will automatically:
-# 1. Read these schemas from GET /schema endpoint
-# 2. Use them for document validation when creating/editing
-# 3. Handle all database operations (CRUD) directly
-# 4. You don't need to create any database endpoints!
+# Go Go Sparkles contact/booking submissions
+class ContactSubmission(BaseModel):
+    """
+    Contact submissions and booking requests
+    Collection name: "contactsubmission"
+    """
+    name: str = Field(..., description="Full name of the requester")
+    email: EmailStr = Field(..., description="Email for follow-up")
+    phone: Optional[str] = Field(None, description="Phone number")
+    event_type: Literal[
+        'Wedding', 'Corporate', 'Birthday', 'Baptism', 'Gender Reveal', 'Other'
+    ] = Field(..., description="Type of event")
+    date: Optional[str] = Field(None, description="Event date (string)")
+    location: Optional[str] = Field(None, description="Event location/city")
+    message: Optional[str] = Field(None, description="Additional details or questions")
